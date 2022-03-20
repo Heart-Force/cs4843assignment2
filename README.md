@@ -15,3 +15,5 @@ Install necessary php/apache services within the application instance to get the
 
 Configure an application load balancer with targeting on the application instances. Create a new security group for the load balancer with whatever settings needed.
 Website is now up and running with the basics
+
+Afterwards you create the database and make it mysql. When it is up and running you create subdatabases for each application server you have running. Once the main database is online you connect it to the security group for the application instances. Now db is connected
