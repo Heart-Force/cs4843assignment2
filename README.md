@@ -1,7 +1,7 @@
 # cs4843assignment2
 
-#Website link: http://assign2-albn-539650302.us-east-1.elb.amazonaws.com/
-# http://assign2-albn-539650302.us-east-1.elb.amazonaws.com/phpMyAdmin/
+Website link: http://assign2-albn-539650302.us-east-1.elb.amazonaws.com/
+http://assign2-albn-539650302.us-east-1.elb.amazonaws.com/phpMyAdmin/
 
 Create a VPC in a selected region with your specific IP i.e 172.20.0.0
 
