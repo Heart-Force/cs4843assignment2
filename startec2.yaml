@@ -1,0 +1,22 @@
+Resource:
+    Appnode:
+        Type: AWS::EC2::Instance
+        Properties:
+            InstanceType: t2.micro
+            ImageId: ami-0c02fb55956c7d316
+            KeyName: assign2keypair
+            SecurityGroups:
+            - !Ref AppNodeSG
+    AppNodeSG:
+        Type: AWS::EC2::SecurityGroup
+        Properties:
+            GroupDescription: SSH, HTTP app nodes
+            SecurityGroupIngress:
+            - IpProtocol: tcp
+              FromPort: '80'
+              ToPort: '80'
+              CidrIp: 0.0.0.0/0
+            - IpProtocol: tcp
+              FromPort: '22'
+              ToPort: '22'
+              CidrIp: 0.0.0.0/0

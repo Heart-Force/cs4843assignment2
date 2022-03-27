@@ -1,0 +1,58 @@
+Resource:
+    AppNode:
+        Type: AWS::EC2::Instance
+        Properties:
+            InstanceType: t2.micro
+            ImageId: ami-0c02fb55956c7d316
+            Keyname: assign2keypair
+            SecurityGroups:
+                - !Ref AppNodeSG
+            UserData: !Base64 |
+                #!/bin/bash
+                apt-get update -qq
+                apt-get install -y apt-transport-https ca-certificates
+                apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+                echo "deb https://apt.dockproject.org/repo ubuntu-xenial main" | tee /etc/apt/sources.list.d/docker.list
+                apt-get update -qq
+                apt-get purge lxc-docker || true
+                apt-get -y install linux-image-extra-$(uname -r) linux-image-extra-virtual
+                apt-get -y install docker-engine
+                usermode -aG docker ubuntu
+                mkdir -p /etc/systemd/system/docker.service.d
+                printf "[Service]\nExecStart=\nExecStart=/usr/bin/dockerd -H fd:// -H tcp://0.0.0.0:2375\n" >> /etc/systemd/system/docker.service.d/docker.conf
+                systemctl daemon-reload
+                systemctl restart docker
+        AppNodeSG:
+            Type: AWS::EC2::SecurityGroup
+            Properties:
+                GroupDescription: SSH, HTTP and docker app
+                SecurityGroupIngress:
+                - IpProtocol: tcp
+                  FromPort: '80'
+                  ToPort: '80'
+                  CidrIp: 0.0.0.0/0
+                - IpProtocol: tcp
+                  FromPort: '22'
+                  ToPort: '22'
+                  CidrIp: 0.0.0.0/0
+                - IpProtocol: tcp
+                  FromPort: '2375'
+                  ToPort: '2375'
+                  CidrIp: 0.0.0.0/0
+        DatabaseInstance:
+            Type: AWS::RDS::DBInstance
+            Properties:
+                DBName: "dbname"
+                Engine: MySQL
+                MasterUsername: admin
+                MasterUserPassword: 12345678
+                DBInstanceClass: db.t2.micro
+                AllocatedStorage: '5'
+                DBSecurityGroup:
+                    - !Ref DatabaseSG
+        DatabaseSG:
+            Type: AWS::RDS::DBSecurityGroup
+            Properties:
+                GroupDescription: SG for RDS
+                DBSecurityGroupIngress:
+                    - CIDRIP: 0.0.0.0/0

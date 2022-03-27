@@ -1,0 +1,14 @@
+version: '2'
+services:
+    app:
+        image: devteds/rails-api-example
+        ports:
+         - "80:3000"
+        environment:
+        DB_USER: admin
+        DB_NAME: dbname
+        DB_PASSWORD: 12345678
+        DB_HOST: assign2-db1.c0aazqhqvx2q.us-east-1.rds.amazonaws.com
+        RAILS_ENV: production
+        RAILS_LOG_TO_STDOUT: 1
+        SECRET_KEY_BASE: YpZxLeBiCl+MueUIbhaAj8wtSTydjHWGqCFIMq1V
